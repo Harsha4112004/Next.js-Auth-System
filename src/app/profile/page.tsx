@@ -3,10 +3,10 @@ import React from 'react'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
 export default function page() {
   const[user,setUser]=React.useState({
+    _id:"",
     username:"",
     email:"",
     isVerified:undefined
@@ -21,6 +21,16 @@ export default function page() {
       toast.error("Something went wrong");
     }
   }
+
+  const verify = async () => {
+    try {
+      await axios.post('/api/sendemailverify', { emailType: "VERIFY", userId: user._id, email: user.email });
+      toast.success("Verification email sent");
+    }catch (error:any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  }
+
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -39,7 +49,7 @@ export default function page() {
         <h1>Email: {user.email}</h1>
         <h1>Email Verified: {user.isVerified ? "Yes" : "No"}</h1>
         <button className='bg-blue-600 text-white p-2 m-3 rounded-2xl hover:bg-blue-400' onClick={logout}>Logout</button>
-
+        {!user.isVerified && <button className='bg-blue-600 text-white p-2 m-3 rounded-2xl hover:bg-blue-400' onClick={verify}>Verify Email</button>}
     </div>
   )
 }
