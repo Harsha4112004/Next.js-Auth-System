@@ -1,55 +1,95 @@
-"use client"
-import React from 'react'
-import toast from 'react-hot-toast'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
+"use client";
 
-export default function page() {
-  const[user,setUser]=React.useState({
-    _id:"",
-    username:"",
-    email:"",
-    isVerified:undefined
+import React from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
+export default function ProfilePage() {
+  const [user, setUser] = React.useState({
+    _id: "",
+    username: "",
+    email: "",
+    isVerified: undefined,
   });
+
   const router = useRouter();
+
   const logout = async () => {
     try {
-      await axios.get('/api/logout');
+      await axios.get("/api/logout");
       toast.success("Logout successful");
-      router.push('/login');
+      router.push("/login");
     } catch (error) {
       toast.error("Something went wrong");
     }
-  }
+  };
 
-  const verify = async () => {
+  const sendVerificationEmail = async () => {
     try {
-      await axios.post('/api/sendemailverify', { emailType: "VERIFY", userId: user._id, email: user.email });
+      await axios.post("/api/sendemailverify", {
+        emailType: "VERIFY",
+        userId: user._id,
+        email: user.email,
+      });
       toast.success("Verification email sent");
-    }catch (error:any) {
+    } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
-  }
+  };
 
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('/api/me');
+        const response = await axios.get("/api/me");
         setUser(response.data);
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     fetchUser();
   }, []);
+
   return (
-    <div className='text-white bg-gray-950 min-h-screen flex items-center justify-center flex-col'>
-        <h1 className='font-bold text-2xl'>Profile</h1>
-        <h1>Username: {user.username}</h1>
-        <h1>Email: {user.email}</h1>
-        <h1>Email Verified: {user.isVerified ? "Yes" : "No"}</h1>
-        <button className='bg-blue-600 text-white p-2 m-3 rounded-2xl hover:bg-blue-400' onClick={logout}>Logout</button>
-        {!user.isVerified && <button className='bg-blue-600 text-white p-2 m-3 rounded-2xl hover:bg-blue-400' onClick={verify}>Verify Email</button>}
+    <div className="bg-gray-950 min-h-screen flex items-center justify-center p-4">
+      <div className="bg-gray-900 text-white rounded-2xl shadow-lg p-8 w-full max-w-md flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-6">Profile</h1>
+
+        <div className="space-y-2 mb-6 text-center">
+          <p>
+            <span className="font-semibold">Username:</span> {user.username}
+          </p>
+          <p>
+            <span className="font-semibold">Email:</span> {user.email}
+          </p>
+          <p>
+            <span className="font-semibold">Email Verified:</span>{" "}
+            {user.isVerified ? (
+              <span className="text-green-400 font-semibold">Yes</span>
+            ) : (
+              <span className="text-red-400 font-semibold">No</span>
+            )}
+          </p>
+        </div>
+
+        <div className="flex flex-col w-full gap-3">
+          <button
+            onClick={logout}
+            className="w-full bg-blue-600 hover:bg-blue-500 transition-colors text-white py-2 rounded-2xl font-medium"
+          >
+            Logout
+          </button>
+
+          {!user.isVerified && (
+            <button
+              onClick={sendVerificationEmail}
+              className="w-full bg-yellow-500 hover:bg-yellow-400 transition-colors text-white py-2 rounded-2xl font-medium"
+            >
+              Send Verification Email
+            </button>
+          )}
+        </div>
+      </div>
     </div>
-  )
+  );
 }

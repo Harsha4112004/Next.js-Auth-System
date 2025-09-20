@@ -22,7 +22,7 @@ export const sendMail = async ({ email, emailType, userId }: any) => {
             from: "autobots.omega@gmail.com",
             to: email,
             subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password",
-            html: `<p>Click <a href="${process.env.DOMAIN}/${emailType === "VERIFY" ? "verifyemail" : "resetpassword"}?token=${hashedtoken}">here</a> to ${emailType === "VERIFY" ? "verify your email" : "reset your password"}</p>`
+            html: `<p>Click <a href="${process.env.DOMAIN}/${emailType === "VERIFY" ? "verify-email" : "reset-password"}?token=${hashedtoken}">here</a> to ${emailType === "VERIFY" ? "verify your email" : "reset your password"}</p>`
         };
         const res = await transport.sendMail(mailOptions);
         return res;
