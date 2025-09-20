@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value || "";
   const pathname = request.nextUrl.pathname;
 
-  const publicPaths = ["/login", "/signup"];
+  const publicPaths = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
   // Not logged in → only allow public pages
   if (!token && !publicPaths.includes(pathname)) {
@@ -20,5 +20,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/signup", "/profile"],
+  matcher: ["/", "/login", "/signup", "/profile", "/forgot-password", "/reset-password"],
 };

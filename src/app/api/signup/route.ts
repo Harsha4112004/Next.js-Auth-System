@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
                 {status: 400}
             );
         }
+        
 
         const existingUsername = await User.findOne({username});
         if(existingUsername){

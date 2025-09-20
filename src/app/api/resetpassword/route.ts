@@ -15,10 +15,11 @@ export async function POST(request: NextRequest) {
         if (!user) {
             return NextResponse.json({ message: "Invalid or expired token" }, { status: 400 });
         }
-        if(password === user.password){
-            return NextResponse.json({ message: "New password cannot be same as old password" }, { status: 400 });
-        }
         const hashedPassword = await bcrypt.hash(password, 10);
+        const isSamePassword = await bcrypt.compare(password, user.password);
+        if (isSamePassword) {
+            return NextResponse.json({ message: "New password cannot be same as old password" }, { status: 401 });
+        }
         user.password = hashedPassword;
         user.forgotPasswordToken = undefined;
         user.forgotPasswordExpiry = undefined;

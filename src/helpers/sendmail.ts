@@ -11,11 +11,12 @@ export const sendMail = async ({ email, emailType, userId }: any) => {
             await User.findByIdAndUpdate(userId, { forgotPasswordToken: hashedtoken, forgotPasswordExpiry: Date.now() + 3600000 })
         }
         const transport = nodemailer.createTransport({
-            host: "sandbox.smtp.mailtrap.io",
-            port: 2525,
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
-                user: process.env.MAILTRAP_USER,
-                pass: process.env.MAILTRAP_PASSWORD
+                user: process.env.USER,
+                pass: process.env.PASSWORD
             }
         });
         const mailOptions = {
