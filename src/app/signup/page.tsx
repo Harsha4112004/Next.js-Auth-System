@@ -13,6 +13,7 @@ export default function Page() {
   const router = useRouter();
   const [user, setUser] = useState({ username: "", password: "", email: "" });
   const [disable, setDisable] = useState(true);
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     const isUsernameValid = user.username.length >= 6;
@@ -23,6 +24,7 @@ export default function Page() {
   }, [user]);
 
   const onSignup = async () => {
+    setLoading(true); // Start loading
     try {
       await axios.post("/api/signup", user);
       toast.success("Signup Successful");
@@ -39,6 +41,8 @@ export default function Page() {
       } else {
         toast.error("Server error");
       }
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -101,10 +105,10 @@ export default function Page() {
 
               <Button
                 type="submit"
-                disabled={disable}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 text-white py-3 rounded-2xl font-semibold shadow-lg transition-all"
+                disabled={disable || loading} // Disable button while loading
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 text-white py-3 rounded-2xl font-semibold shadow-lg transition-all flex items-center justify-center"
               >
-                Signup
+                {loading ? "Signing up..." : "Signup"} {/* Show loading text */}
               </Button>
 
               <div className="mt-4 text-center text-sm">

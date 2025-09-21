@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-gray-950 to-gray-900 p-6">
-      <Card className="bg-gray-900 text-white max-w-md w-full shadow-xl rounded-3xl transform hover:scale-105 transition-transform duration-300">
+      <Card className="bg-gray-900 border border-gray-700  text-white max-w-md w-full shadow-xl rounded-3xl transform hover:scale-105 transition-transform duration-300">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold mb-2">Welcome Back!</CardTitle>
           <p className="text-gray-300">Manage your profile and account settings easily.</p>

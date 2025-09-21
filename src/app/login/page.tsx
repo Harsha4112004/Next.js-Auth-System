@@ -13,12 +13,14 @@ export default function Page() {
   const [user, setUser] = useState({ username: "", password: "", email: "" });
   const router = useRouter();
   const [disable, setDisable] = useState(true);
+  const [loading, setLoading] = useState(false); // new loading state
 
   useEffect(() => {
     setDisable(!(user.username.length > 0 && user.password.length > 0));
   }, [user]);
 
   const onLogin = async () => {
+    setLoading(true); // start loading
     try {
       await axios.post("/api/login", {
         username: user.username,
@@ -32,6 +34,8 @@ export default function Page() {
       } else {
         toast.error("Something went wrong");
       }
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 
@@ -86,10 +90,10 @@ export default function Page() {
                 <div className="flex flex-col gap-3">
                   <Button
                     type="submit"
-                    disabled={disable}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 text-white py-3 rounded-2xl font-semibold shadow-lg transition-all"
+                    disabled={disable || loading}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 text-white py-3 rounded-2xl font-semibold shadow-lg transition-all flex items-center justify-center"
                   >
-                    Login
+                    {loading ? "Logging in..." : "Login"}
                   </Button>
                 </div>
               </div>
