@@ -8,7 +8,10 @@ export function getDataFromToken(req: NextRequest) {
             return null;
         }
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET!);
-        return decoded.id;
+        if (typeof decoded === "object" && decoded !== null && "id" in decoded) {
+            return (decoded as jwt.JwtPayload).id;
+        }
+        return null;
 
 }catch (error) {
         console.log("Error in getDataFromToken", error);
